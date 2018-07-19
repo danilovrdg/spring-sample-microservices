@@ -1,7 +1,6 @@
 version: '3'
 
 services:
-
     config:
       build:
         dockerfile: ./config-service/Dockerfile
