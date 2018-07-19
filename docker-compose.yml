@@ -14,12 +14,12 @@ services:
       networks:
         - desenv-network
 
-    registry:
+    discovery:
       build:
         dockerfile: ./discovery-service/Dockerfile
         context: .
-      image: danilor/registry
-      container_name: registry
+      image: danilor/discovery
+      container_name: discovery
       restart: always
       depends_on:
         - config
@@ -37,7 +37,7 @@ services:
       restart: always
       depends_on:
         - config
-        - registry
+        - discovery
       ports:
         - 8080:8080
       networks:
@@ -52,7 +52,7 @@ services:
       restart: always
       depends_on:
         - config
-        - registry
+        - discovery
         - gateway
       ports:
         - 8081:8081
