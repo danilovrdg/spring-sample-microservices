@@ -1,0 +1,64 @@
+version: '3'
+
+services:
+
+    config:
+      build:
+        dockerfile: ./config-service/Dockerfile
+        context: .
+      image: danilor/config
+      container_name: config
+      restart: always
+      ports:
+        - 9090:9090
+      networks:
+        - desenv-network
+
+    registry:
+      build:
+        dockerfile: ./discovery-service/Dockerfile
+        context: .
+      image: danilor/registry
+      container_name: registry
+      restart: always
+      depends_on:
+        - config
+      ports:
+        - 9091:9091
+      networks:
+        - desenv-network
+
+    gateway:
+      build:
+        dockerfile: ./gateway-service/Dockerfile
+        context: .
+      image: danilor/gateway
+      container_name: gateway
+      restart: always
+      depends_on:
+        - config
+        - registry
+      ports:
+        - 8080:8080
+      networks:
+        - desenv-network
+
+    account:
+      build:
+        dockerfile: ./account-service/Dockerfile
+        context: .
+      image: danilor/account
+      container_name: account
+      restart: always
+      depends_on:
+        - config
+        - registry
+        - gateway
+      ports:
+        - 8081:8081
+      networks:
+        - desenv-network
+
+networks:
+  desenv-network:
+    driver: bridge
